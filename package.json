@@ -4,15 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/index.js"
+    "start": "node ./bin/www.js",
+    "test": "mocha ./test/index.js --reporter mochawesome --timeout 20000 --reporter-options reportDir=./reporters/index/,reportFilename=index,timestamp=yyyymmddHHMMss",
+    "main": "mocha ./test/specs/main.js --reporter mochawesome --timeout 20000 --reporter-options reportDir=./reporters/main/,reportFilename=main,timestamp=yyyymmddHHMMss,autoOpen=true"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "chai": "^4.1.2",
+    "connect-timeout": "^1.9.0",
+    "dateformat": "^3.0.3",
     "express": "^4.16.3",
     "mocha": "^5.2.0",
     "mochawesome": "^3.0.3",
+    "node-cmd": "^3.0.0",
+    "pug": "^2.0.3",
     "selenium-webdriver": "^4.0.0-alpha.1"
   }
 }

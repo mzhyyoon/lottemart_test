@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2018-08-31T01:37:17.588Z",
-    "end": "2018-08-31T01:37:22.237Z",
-    "duration": 4649,
+    "start": "2018-08-31T04:29:02.794Z",
+    "end": "2018-08-31T04:29:07.561Z",
+    "duration": 4767,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -19,7 +19,7 @@
     "pendingPercentClass": "danger"
   },
   "suites": {
-    "uuid": "9f68a3dc-48a3-4a72-be1b-f12b2def6f6a",
+    "uuid": "e86e5763-5565-4377-aca7-ece3f2ade8c9",
     "title": "",
     "fullFile": "",
     "file": "",
@@ -28,7 +28,7 @@
     "tests": [],
     "suites": [
       {
-        "uuid": "28dd9382-949a-4ea1-9c0b-dbfe5786c6ff",
+        "uuid": "86b51b1e-975c-4189-b088-a80151224518",
         "title": "Mobile > Main",
         "fullFile": "C:\\Users\\hyyoon\\Desktop\\lottemart_test\\test\\index.js",
         "file": "\\test\\index.js",
@@ -37,14 +37,14 @@
             "title": "\"before each\" hook",
             "fullTitle": "Mobile > Main \"before each\" hook",
             "timedOut": false,
-            "duration": 4626,
+            "duration": 4744,
             "pass": false,
             "fail": false,
             "pending": false,
             "code": "await driver.get(C.mobileUrl);",
             "err": {},
             "isRoot": false,
-            "uuid": "2f4b2b4f-6731-4a7d-a2ef-d21c05208e5b",
+            "uuid": "6416febd-a8b9-4ee3-858a-75ea9d6944f9",
             "isHook": true,
             "skipped": false
           }
@@ -61,7 +61,7 @@
             "code": "driver.quit();",
             "err": {},
             "isRoot": false,
-            "uuid": "9a9b0477-30bf-4b6a-8e13-356f33bae4df",
+            "uuid": "ac045030-d8e2-4f7e-b856-815ce2faf5b7",
             "isHook": true,
             "skipped": false
           }
@@ -71,7 +71,7 @@
             "title": "Page Title 은 \"롯데마트몰 - easy & slow life\" 인가?",
             "fullTitle": "Mobile > Main Page Title 은 \"롯데마트몰 - easy & slow life\" 인가?",
             "timedOut": false,
-            "duration": 7,
+            "duration": 8,
             "state": "passed",
             "speed": "fast",
             "pass": true,
@@ -80,19 +80,19 @@
             "code": "return driver.getTitle().then((title) => {\n    assert.equal(title, '롯데마트몰 - easy & slow life');\n});",
             "err": {},
             "isRoot": false,
-            "uuid": "07d101db-c1af-4c7f-aebc-5524cfce4077",
+            "uuid": "5e8b02b5-3381-4f17-adc2-4e97391f466f",
             "isHook": false,
             "skipped": false
           }
         ],
         "suites": [],
         "passes": [
-          "07d101db-c1af-4c7f-aebc-5524cfce4077"
+          "5e8b02b5-3381-4f17-adc2-4e97391f466f"
         ],
         "failures": [],
         "pending": [],
         "skipped": [],
-        "duration": 7,
+        "duration": 8,
         "root": false,
         "rootEmpty": false,
         "_timeout": 20000
