@@ -17,16 +17,16 @@ let driver = new Builder()
     .build();
 
 describe('Mobile > Main', function () {
-    before(async function () {
-        await driver.get(C.mobileUrl);
+    before(function () {
+        driver.get(C.mobileUrl);
     });
-
+    //
     after(function () {
         driver.quit();
     });
 
     it('Page Title 은 "롯데마트몰 - easy & slow life" 인가?', () => {
-        return driver.getTitle().then((title) => {
+        driver.getTitle().then((title) => {
             assert.equal(title, '롯데마트몰 - easy & slow life');
         });
     })
