@@ -3,14 +3,8 @@ const {assert, expect} = require('chai');
 const C = require('../../constants');
 
 let driver = new Builder()
-    .withCapabilities({
-        browserName: 'chrome',
-        chromeOptions: {
-            mobileEmulation: {
-                deviceName: 'iPhone 6/7/8 Plus'
-            }
-        }
-    }).build();
+    .forBrowser('phantomjs')
+    .build();
 
 describe('Mobile > Main', function () {
     this.timeout(20000);
