@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', (req, res, next) => {
     cmd.get(
-        'npm run main',
+        'mocha ./test/specs/main.spec.js --reporter json-stream --timeout 20000',
         (err, data, stderr) => {
             if (err) {
                 res.status(500)
@@ -14,7 +14,8 @@ router.get('/', (req, res, next) => {
                         stderr
                     });
             } else {
-                res.status(200).render('main', {title: 'main', message: 'loading'});
+                res.status(200)
+                    .render('main', {title: 'main', message: data});
             }
         }
     );
