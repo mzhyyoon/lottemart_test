@@ -16,7 +16,7 @@ let driver = new Builder()
     .build();
 
 describe('Mobile > Main', function () {
-    this.timeout(20000);
+    this.timeout(200000);
 
     beforeEach(async function () {
         await driver.get(C.mobileUrl);
