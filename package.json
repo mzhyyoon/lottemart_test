@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./bin/www.js",
-    "test": "mocha ./test/index.js --reporter json-stream --timeout 20000 --reporter-options reportDir=./reporters/index/,reportFilename=index,timestamp=yyyymmddHHMMss",
-    "main": "mocha ./test/specs/main.js --reporter json-stream --timeout 20000 --reporter-options reportDir=./reporters/main/,reportFilename=main,timestamp=yyyymmddHHMMss,autoOpen=true"
+    "test": "mocha ./test/specs/*.spec.js --reporter json-stream --timeout 20000 --reporter-options reportDir=./reporters/index/,reportFilename=index,timestamp=yyyymmddHHMMss"
   },
   "author": "",
   "license": "ISC",

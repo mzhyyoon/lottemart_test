@@ -20,14 +20,14 @@ describe('Mobile > Main', function () {
     before(function () {
         driver.get(C.mobileUrl);
     });
-    //
-    after(function () {
-        driver.quit();
-    });
 
     it('Page Title 은 "롯데마트몰 - easy & slow life" 인가?', () => {
-        driver.getTitle().then((title) => {
-            assert.equal(title, '롯데마트몰 - easy & slow life');
+        driver.sleep(1000).then(function () {
+            driver.getTitle().then((title) => {
+                assert.equal(title, '롯데마트몰 - easy & slow life');
+
+                driver.quit();
+            });
         });
     })
 });
