@@ -1,7 +1,5 @@
 const express = require('express');
 const cmd = require('node-cmd');
-const dateFormat = require('dateformat');
-
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
