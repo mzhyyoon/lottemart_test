@@ -1,3 +1,5 @@
+require('chromedriver');
+
 const {Builder} = require('selenium-webdriver');
 const {assert, expect} = require('chai');
 const C = require('../../constants');
