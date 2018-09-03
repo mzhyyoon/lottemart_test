@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./bin/www.js",
-    "test": "mocha ./test/index.js --reporter mochawesome --timeout 200000 --reporter-options reportDir=./reporters/index/,reportFilename=index,timestamp=yyyymmddHHMMss",
-    "main": "mocha ./test/specs/main.js --reporter mochawesome --timeout 200000 --reporter-options reportDir=./reporters/main/,reportFilename=main,timestamp=yyyymmddHHMMss,autoOpen=true"
+    "test": "mocha ./test/index.js --reporter mochawesome --timeout 20000 --reporter-options reportDir=./reporters/index/,reportFilename=index,timestamp=yyyymmddHHMMss",
+    "main": "mocha ./test/specs/main.js --reporter mochawesome --timeout 20000 --reporter-options reportDir=./reporters/main/,reportFilename=main,timestamp=yyyymmddHHMMss,autoOpen=true"
   },
   "author": "",
   "license": "ISC",

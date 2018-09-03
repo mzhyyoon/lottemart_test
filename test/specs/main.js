@@ -8,6 +8,7 @@ let driver = new Builder()
     .withCapabilities({
         browserName: 'chrome',
         chromeOptions: {
+            args : ['headless','disable-gpu'],
             mobileEmulation: {
                 deviceName: 'iPhone 6/7/8 Plus'
             }
@@ -16,8 +17,6 @@ let driver = new Builder()
     .build();
 
 describe('Mobile > Main', function () {
-    this.timeout(200000);
-
     beforeEach(async function () {
         await driver.get(C.mobileUrl);
     });
