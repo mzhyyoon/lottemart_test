@@ -2,9 +2,9 @@ const express = require('express');
 const cmd = require('node-cmd');
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
+router.get('/tc', (req, res) => {
     cmd.get(
-        'mocha ./test/specs/main.spec.js --reporter json-stream --timeout 20000',
+        'mocha ./test/specs/main.spec.js --reporter json --timeout 20000',
         (err, data, stderr) => {
             if (err) {
                 res.status(500)
@@ -12,14 +12,17 @@ router.get('/', (req, res, next) => {
                         success: false,
                         err,
                         stderr
-                    });
+                    })
+                    .end();
             } else {
                 res.status(200)
-                    .render('main', {title: 'main', message: data});
+                    .json({
+                        result : JSON.stringify(data)
+                    })
+                    .end();
             }
         }
     );
-    next();
 });
 
 module.exports = router;

@@ -1,9 +1,12 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const main = require('./routes/main');
 
 const app = express();
 
-app.set('view engine', 'pug');
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(express.static('assets'));
 
 app.use('/main', main);
 
