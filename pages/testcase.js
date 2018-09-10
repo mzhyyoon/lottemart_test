@@ -45,8 +45,6 @@ export default class extends React.Component {
     render() {
         const {lists} = this.state;
 
-        console.log(lists);
-
         return (
             <Layout>
                 <PageHeader>Test Case</PageHeader>
