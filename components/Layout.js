@@ -1,5 +1,7 @@
 import Head from 'next/head';
 import C from '../constants';
+import NavBarContainer from "./navbars/containers";
+import SideBarContainer from "./sidebars/containers";
 
 const Layout = (props) => (
     <div>
@@ -11,7 +13,13 @@ const Layout = (props) => (
             <link rel="stylesheet" href="/static/css/vendor.bundle.base.css" />
             <link rel="stylesheet" href="/static/css/style.css" />
         </Head>
-        {props.children}
+        <div className="container-scroller">
+            <NavBarContainer/>
+            <SideBarContainer/>
+            <div className="main-panel">
+                {props.children}
+            </div>
+        </div>
     </div>
 );
 
