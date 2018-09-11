@@ -1,22 +1,17 @@
-import NavBar from './NavBar';
 import Head from 'next/head';
-import {Col, Grid, Row} from "react-bootstrap";
+import C from '../constants';
 
 const Layout = (props) => (
     <div>
         <Head>
-            <title>Lottemart TDD - Test</title>
-            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+            <title>{C.pageTitle}</title>
+            <meta charSet="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <link rel="stylesheet" href="/static/fonts/mdi/css/materialdesignicons.min.css"/>
+            <link rel="stylesheet" href="/static/css/vendor.bundle.base.css" />
+            <link rel="stylesheet" href="/static/css/style.css" />
         </Head>
-        <NavBar/>
-        <Grid>
-            <Row className="show-grid">
-                <Col xs={18} md={12}>
-                    {props.children}
-                </Col>
-            </Row>
-        </Grid>
+        {props.children}
     </div>
 );
 

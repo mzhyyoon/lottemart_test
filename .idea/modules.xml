@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../api.tdd/api.tdd.iml" filepath="$PROJECT_DIR$/../api.tdd/api.tdd.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/lottemart_test.iml" filepath="$PROJECT_DIR$/.idea/lottemart_test.iml" />
     </modules>
   </component>
