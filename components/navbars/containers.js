@@ -3,6 +3,8 @@ import Logo from "./ui/Logo";
 import User from "./ui/User";
 import FullScreen from "./ui/FullScreen";
 import Email from "./ui/Email";
+import Notice from "./ui/Notice";
+import SignOut from './ui/SignOut';
 
 const NavBarContainer = () => (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -13,6 +15,8 @@ const NavBarContainer = () => (
                 <User/>
                 <FullScreen/>
                 <Email/>
+                <Notice/>
+                <SignOut/>
             </ul>
         </div>
     </nav>

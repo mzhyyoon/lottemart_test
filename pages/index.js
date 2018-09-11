@@ -1,6 +1,7 @@
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import NavBarContainer from "../components/navbars/containers";
+import SideBarContainer from "../components/sidebars/containers";
 
 export default class Index extends React.Component{
     constructor(props) {
@@ -13,22 +14,11 @@ export default class Index extends React.Component{
                 <Layout>
                     <div className="container-scroller">
                         <NavBarContainer/>
-                        <div className="container-fluid page-body-wrapper">
+                        <SideBarContainer/>
+                        {/*<div className="container-fluid page-body-wrapper">
                             <nav className="sidebar sidebar-offcanvas" id="sidebar">
                                 <ul className="nav">
-                                    <li className="nav-item nav-profile">
-                                        <a href="#" className="nav-link">
-                                            <div className="nav-profile-image">
-                                                <img src="/static/images/faces/face1.jpg" alt="profile"/>
-                                                <span className="login-status online"></span>
-                                            </div>
-                                            <div className="nav-profile-text d-flex flex-column">
-                                                <span className="font-weight-bold mb-2">David Grey. H</span>
-                                                <span className="text-secondary text-small">Project Manager</span>
-                                            </div>
-                                            <i className="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                                        </a>
-                                    </li>
+
                                     <li className="nav-item">
                                         <a className="nav-link" href="index.html">
                                             <span className="menu-title">Dashboard</span>
@@ -175,7 +165,7 @@ export default class Index extends React.Component{
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
                     </div>
                 </Layout>
             </div>

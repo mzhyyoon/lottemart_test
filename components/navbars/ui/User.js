@@ -6,7 +6,11 @@ class User extends React.Component {
 
         this.state = {
             user: {
-                isExpanded: false
+                isExpanded: false,
+                profileImage : '/static/images/faces/face1.jpg',
+                name : 'Administration',
+                position : 'Project Manager',
+                isBookMark : false
             }
         }
     }
@@ -26,19 +30,24 @@ class User extends React.Component {
                    onClick={(event) => {
                        event.preventDefault();
                        this.setState({
-                           user: {
-                               isExpanded: !user.isExpanded
-                           }
-                       })
+                           user :
+                               Object.assign(
+                                   {},
+                                   this.state.user,
+                                   {
+                                       isExpanded: !user.isExpanded
+                                   }
+                               )
+                       });
                    }}
                    data-toggle="dropdown"
                    aria-expanded={user.isExpanded}>
                     <div className="nav-profile-img">
-                        <img src="/static/images/faces/face1.jpg" alt="image"/>
+                        <img src={user.profileImage} alt="image"/>
                         <span className="availability-status online"></span>
                     </div>
                     <div className="nav-profile-text">
-                        <p className="mb-1 text-black">David Greymaax</p>
+                        <p className="mb-1 text-black">{user.name}</p>
                     </div>
                 </a>
                 <div className={"dropdown-menu navbar-dropdown " + (user.isExpanded ? 'show' : '')}
