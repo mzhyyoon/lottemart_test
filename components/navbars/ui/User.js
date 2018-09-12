@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import 'isomorphic-unfetch'
 
-export default class User extends React.Component {
+class User extends React.Component {
     constructor(props) {
         super(props);
 
@@ -88,3 +88,5 @@ const RenderList = ({user, isExpanded, toggleExpanded}) => {
         </li>
     );
 };
+
+export default User;
