@@ -12,7 +12,7 @@ export default class User extends React.Component {
     }
 
     async componentWillMount () {
-        const res = await fetch(`http://localhost:3000/api/users/${decodeURIComponent('hyyoon@mz.co.kr')}`);
+        const res = await fetch(location.origin + `/api/users/${encodeURIComponent('hyyoon@mz.co.kr')}`);
         const data = await res.json();
 
         this.setState({...data, isExpanded : false});
