@@ -14,7 +14,7 @@ const apiRoutes = require('../server/routes/apiRoutes.js');
 
 console.log('MONGODB_URI : ', process.env.MONGODB_URI);
 
-db.connect(process.env.MONGODB_URI || 'mongodb://heroku_zcss1c7w:hfcujj2kjtvh3u68r672925ove@ds251632.mlab.com:51632/heroku_zcss1c7w', 'users', (err) => {
+db.connect(process.env.MONGODB_URI || 'mongodb://heroku_zcss1c7w:hfcujj2kjtvh3u68r672925ove@ds251632.mlab.com:51632/heroku_zcss1c7w', 'heroku_zcss1c7w', (err) => {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -38,9 +38,10 @@ app.prepare().then(() => {
         console.log(pathname);
         console.log('route : ', route);
 
-        if (route) {
+        if (route.page) {
             return app.render(req, res, route.page, query);
         }
+
         return handle(req, res);
     });
 
