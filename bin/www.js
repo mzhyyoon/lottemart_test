@@ -30,18 +30,14 @@ app.prepare().then(() => {
 
     server.use('/api', apiRoutes);
 
-    server.get('*', (req, res) => {
+    server.get('/', (req, res) => {
         const parsedUrl = parse(req.url, true);
-        const { pathname, query = {} } = parsedUrl;
-        const route = routes[pathname];
+        const { query = {} } = parsedUrl;
 
-        console.log(pathname);
-        console.log('route : ', route);
+        return app.render(req, res, '/' , query);
+    });
 
-        if (route.page) {
-            return app.render(req, res, route.page, query);
-        }
-
+    server.get('*', (req, res) => {
         return handle(req, res);
     });
 
