@@ -4,17 +4,13 @@ const { parse } = require('url');
 const bodyParser = require('body-parser');
 const timeout = require('connect-timeout');
 const db = require('../db');
-const user = require('../controls/user');
-
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
-
 const app = next({dir: '.', dev });
 const handle = app.getRequestHandler();
-
-const getRoutes = require('../routes');
-
+const getRoutes = require('../routers/index');
 const routes = getRoutes();
+const users = require('../routers/user');
 
 console.log('MONGODB_URI : ', process.env.MONGODB_URI);
 
@@ -32,12 +28,13 @@ app.prepare().then(() => {
     server.use(bodyParser.urlencoded({extended: false}));
     server.use(bodyParser.json());
 
-    server.use('/api/user', user);
+    server.use('/api/users', users);
 
     server.get('*', (req, res) => {
         const parsedUrl = parse(req.url, true);
         const { pathname, query = {} } = parsedUrl;
         const route = routes[pathname];
+
         if (route) {
             return app.render(req, res, route.page, query);
         }
