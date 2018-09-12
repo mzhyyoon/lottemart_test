@@ -18,6 +18,12 @@ export default class User extends React.Component {
         this.setState({...data, isExpanded : false});
     }
 
+    toggleExpanded = (isExpanded = false) => {
+        this.setState(
+            isExpanded
+        );
+    };
+
     render() {
         const {
             user,
@@ -25,12 +31,14 @@ export default class User extends React.Component {
         } = this.state;
 
         return (
-            <RenderList user={user} isExpanded={isExpanded}/>
+            <RenderList user={user}
+                        isExpanded={isExpanded}
+                        toggleExpanded={this.toggleExpanded}/>
         );
     }
 };
 
-const RenderList = ({user, isExpanded}) => {
+const RenderList = ({user, isExpanded, toggleExpanded}) => {
     if(user.length === 0) {
         return null;
     }
@@ -47,7 +55,7 @@ const RenderList = ({user, isExpanded}) => {
                href="#"
                onClick={(event) => {
                    event.preventDefault();
-                   this.setState({
+                   toggleExpanded({
                        isExpanded: !isExpanded
                    });
                }}
