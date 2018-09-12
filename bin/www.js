@@ -8,9 +8,9 @@ const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
 const app = next({dir: '.', dev });
 const handle = app.getRequestHandler();
-const getRoutes = require('../routers/index');
+const getRoutes = require('../routes');
 const routes = getRoutes();
-const users = require('../routers/user');
+const apiRoutes = require('../server/routes/apiRoutes.js');
 
 console.log('MONGODB_URI : ', process.env.MONGODB_URI);
 
@@ -28,12 +28,15 @@ app.prepare().then(() => {
     server.use(bodyParser.urlencoded({extended: false}));
     server.use(bodyParser.json());
 
-    server.use('/api/users', users);
+    server.use('/api', apiRoutes);
 
     server.get('*', (req, res) => {
         const parsedUrl = parse(req.url, true);
         const { pathname, query = {} } = parsedUrl;
         const route = routes[pathname];
+
+        console.log(pathname);
+        console.log('route : ', route);
 
         if (route) {
             return app.render(req, res, route.page, query);
