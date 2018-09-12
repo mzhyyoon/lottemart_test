@@ -16,6 +16,8 @@ const getRoutes = require('../routes');
 
 const routes = getRoutes();
 
+console.log('MONGODB_URI : ', process.env.MONGODB_URI);
+
 db.connect(process.env.MONGODB_URI || 'mongodb://heroku_zcss1c7w:hfcujj2kjtvh3u68r672925ove@ds251632.mlab.com:51632/heroku_zcss1c7w', 'users', (err) => {
     if (err) {
         console.log(err);
