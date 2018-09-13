@@ -37,6 +37,13 @@ app.prepare().then(() => {
         return app.render(req, res, '/' , query);
     });
 
+    server.get('/testcase', (req, res) => {
+        const parsedUrl = parse(req.url, true);
+        const { query = {} } = parsedUrl;
+
+        return app.render(req, res, '/testcase', query);
+    });
+
     server.get('*', (req, res) => {
         return handle(req, res);
     });

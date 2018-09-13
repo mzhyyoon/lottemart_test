@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import 'isomorphic-unfetch';
 
 class Profile extends React.Component {
@@ -5,15 +6,8 @@ class Profile extends React.Component {
         super(props);
 
         this.state = {
-            user: []
+            user: props.user
         };
-    }
-
-    async componentWillMount() {
-        const res = await fetch(location.origin + `/api/users/${encodeURIComponent('hyyoon@mz.co.kr')}`);
-        const data = await res.json();
-
-        this.setState({...data});
     }
 
     render() {
@@ -41,21 +35,23 @@ const RenderProfile = ({user}) => {
 
     return (
         <li className="nav-item nav-profile">
-            <a href="#" className="nav-link">
-                <div className="nav-profile-image">
-                    <img src={profileImage} alt="profile"/>
-                    <span className="login-status online"></span>
-                </div>
-                <div className="nav-profile-text d-flex flex-column">
-                        <span className="font-weight-bold mb-2">
-                            {name}
-                        </span>
-                    <span className="text-secondary text-small">
-                            {position}
-                        </span>
-                </div>
-                <i className={"mdi mdi-bookmark-check " + (isBookMark ? 'text-success' : '') + " nav-profile-badge"}></i>
-            </a>
+            <Link href="/">
+                <a className="nav-link">
+                    <div className="nav-profile-image">
+                        <img src={profileImage} alt="profile"/>
+                        <span className="login-status online"></span>
+                    </div>
+                    <div className="nav-profile-text d-flex flex-column">
+                            <span className="font-weight-bold mb-2">
+                                {name}
+                            </span>
+                        <span className="text-secondary text-small">
+                                {position}
+                            </span>
+                    </div>
+                    <i className={"mdi mdi-bookmark-check " + (isBookMark ? 'text-success' : '') + " nav-profile-badge"}></i>
+                </a>
+            </Link>
         </li>
     );
 };

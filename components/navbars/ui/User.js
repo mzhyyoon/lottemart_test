@@ -6,16 +6,9 @@ class User extends React.Component {
         super(props);
 
         this.state = {
-            user : [],
+            user : props.user,
             isExpanded: false
         };
-    }
-
-    async componentWillMount () {
-        const res = await fetch(location.origin + `/api/users/${encodeURIComponent('hyyoon@mz.co.kr')}`);
-        const data = await res.json();
-
-        this.setState({...data, isExpanded : false});
     }
 
     toggleExpanded = (isExpanded = false) => {
