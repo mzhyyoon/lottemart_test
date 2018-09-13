@@ -16,9 +16,11 @@ const Layout = ({children, user}) => {
             </Head>
             <div className="container-scroller">
                 <NavBarContainer user={user}/>
-                <SideBarContainer user={user}/>
-                <div className="main-panel">
-                    {children}
+                <div className="container-fluid page-body-wrapper">
+                    <SideBarContainer user={user}/>
+                    <div className="main-panel">
+                        {children}
+                    </div>
                 </div>
             </div>
         </div>

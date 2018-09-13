@@ -6,7 +6,7 @@ const TestCase = () => (
         <Link href={'/testcase'}>
             <a className="nav-link">
                 <span className="menu-title">TestCase</span>
-                <i className="mdi mdi-format-list-bulleted menu-icon"></i>
+                <i className="mdi mdi-playlist-check menu-icon"></i>
             </a>
         </Link>
     </ActiveNav>

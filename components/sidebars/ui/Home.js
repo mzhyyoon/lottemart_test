@@ -7,7 +7,7 @@ const Home = () => {
             <Link href="/">
                 <a className="nav-link">
                     <span className="menu-title">Home</span>
-                    <i className="mdi mdi-home menu-icon"></i>
+                    <i className="mdi mdi-view-dashboard menu-icon"></i>
                 </a>
             </Link>
         </ActiveNav>
