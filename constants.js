@@ -8,7 +8,7 @@ const constants = {
     },
     hosts : {
         development : 'http://localhost:3000',
-        production : 'https://lottemarttddtest.herokuapp.com/'
+        production : 'https://lottemarttddtest.herokuapp.com'
     }
 };
 

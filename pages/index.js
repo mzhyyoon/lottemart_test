@@ -11,7 +11,7 @@ const Index = ({children, router, href, user}) => {
     );
 };
 
-Index.getInitialProps = async ({req}) => {
+Index.getInitialProps = async () => {
     const res = await fetch(`${C.hosts[process.env.NODE_ENV]}/api/users/${encodeURIComponent('hyyoon@mz.co.kr')}`);
     const data = await res.json();
 
