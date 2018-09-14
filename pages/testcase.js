@@ -3,6 +3,7 @@ import 'isomorphic-unfetch';
 import {withRouter} from 'next/router';
 import C from '../constants';
 import moment from 'moment';
+import isEmpty from '../assets/js/is-empty';
 
 const TestCase = ({children, router, href, user, testcases}) => {
     return (
@@ -20,66 +21,18 @@ const TestCase = ({children, router, href, user, testcases}) => {
                         </div>
                     </div>
                 </div>
-                {testcases.map(testcase =>
-                    <div className="row">
-                        <div className="col-lg-12 grid-margin stretch-card">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h4 className="card-title">
-                                        {testcase.type}
-                                        <button type="button"
-                                                className="btn btn-inverse-primary btn-rounded btn-icon float-right">
-                                            <i className="mdi mdi-arrow-right-drop-circle-outline"></i>
-                                        </button>
-                                    </h4>
-                                    {testcase.timestamp &&
-                                        <p className="card-description">
-                                            <em className="text-muted small">
-                                                Last Modify : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
-                                            </em>
-                                        </p>
-                                    }
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Describe</th>
-                                                <th>It</th>
-                                                <th>Result</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {testcase.shoulds.map(should =>
-                                            <tr>
-                                                <td>{should.describe}</td>
-                                                <td>{should.it}</td>
-                                                <td>
-                                                    {should.result === 'ok' ? (
-                                                        <span className="text-success">
-                                                            Success
-                                                        </span>
-                                                    ) : (
-                                                        <span className="text-danger">
-                                                            Fail
-                                                        </span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <RenderTestCase
+                    user={user}
+                    router={router}
+                    testcases={testcases} />
             </div>
         </Layout>
     );
 };
 
 TestCase.getInitialProps = async () => {
-    const userResponse = await fetch(`${C.hosts[process.env.NODE_ENV]}/api/users/${encodeURIComponent('hyyoon')}`);
-    const testcasesResponse = await fetch(`${C.hosts[process.env.NODE_ENV]}/api/testcases/${encodeURIComponent('hyyoon')}`);
+    const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
+    const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
 
     const userJSONData = await userResponse.json();
     const testcasesJSONData = await testcasesResponse.json();
@@ -88,6 +41,88 @@ TestCase.getInitialProps = async () => {
         user : userJSONData.user,
         testcases : testcasesJSONData.testcase
     };
+};
+
+const RenderTestCase = ({testcases}) => {
+    if(isEmpty(testcases)) {
+        return (
+            <div>{C.messages.noResult}</div>
+        )
+    }
+
+    const onStart = (id, type) => {
+        fetch(`${C.hosts.page[process.env.NODE_ENV]}/api/testcases`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id, type})
+        });
+    };
+
+    return testcases.map((testcase, index) =>
+        <div key={index} className="row">
+            <div className="col-lg-12 grid-margin stretch-card">
+                <div className="card">
+                    <div className="card-body">
+                        <h4 className="card-title">
+                            {testcase.type}
+                            <button type="button"
+                                    className="btn btn-inverse-primary btn-rounded btn-icon float-right"
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        onStart(
+                                            testcase._id,
+                                            testcase.type.toLowerCase()
+                                        );
+                                    }}>
+                                <i className="mdi mdi-arrow-right-drop-circle-outline"></i>
+                            </button>
+                        </h4>
+                        {testcase.timestamp &&
+                        <p className="card-description">
+                            <em className="text-muted small">
+                                Last Modify : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                            </em>
+                        </p>
+                        }
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>Describe</th>
+                                <th>Result</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {isEmpty(testcase.result) ? (
+                                <tr>
+                                    <td colSpan={2}>{C.messages.noResult}</td>
+                                </tr>
+                            ) : (testcase.result.tests.map((test, index) =>
+                                <tr key={index}>
+                                    <td>{test.title}</td>
+                                    <td>
+                                        {isEmpty(test.err) ? (
+                                            <span className="text-success">
+                                                Success
+                                            </span>
+                                        ) : (
+                                            <span className="text-danger">
+                                                Fail
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                                )
+                            )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default withRouter(TestCase);

@@ -7,8 +7,17 @@ const constants = {
         }
     },
     hosts : {
-        development : 'http://localhost:3000',
-        production : 'https://lottemarttddtest.herokuapp.com'
+        page : {
+            development: 'http://localhost:3000',
+            production: 'https://lottemarttddtest.herokuapp.com'
+        },
+        api : {
+            development: 'http://localhost:3001',
+            production : 'https://api-tdd-test.herokuapp.com'
+        }
+    },
+    messages : {
+        noResult : 'No results found.'
     }
 };
 

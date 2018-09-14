@@ -25,7 +25,7 @@ const Index = ({children, router, href, user}) => {
 };
 
 Index.getInitialProps = async () => {
-    const res = await fetch(`${C.hosts[process.env.NODE_ENV]}/api/users/${encodeURIComponent('hyyoon')}`);
+    const res = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
     const data = await res.json();
 
     return data;
