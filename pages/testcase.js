@@ -6,6 +6,25 @@ import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 
 const TestCase = ({children, router, href, user, testcases}) => {
+    const onStart = (id, type) => {
+        fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id,
+                type,
+                userId : user.id
+            })
+        }).then(() => {
+            router.push('/testcase');
+        }).catch(() => {
+            router.push('/testcase');
+        });
+    };
+
     return (
         <Layout user={user}>
             <div className="content-wrapper">
@@ -22,8 +41,7 @@ const TestCase = ({children, router, href, user, testcases}) => {
                     </div>
                 </div>
                 <RenderTestCase
-                    user={user}
-                    router={router}
+                    onStart={onStart}
                     testcases={testcases} />
             </div>
         </Layout>
@@ -43,23 +61,12 @@ TestCase.getInitialProps = async () => {
     };
 };
 
-const RenderTestCase = ({testcases}) => {
+const RenderTestCase = ({testcases, onStart}) => {
     if(isEmpty(testcases)) {
         return (
             <div>{C.messages.noResult}</div>
         )
     }
-
-    const onStart = (id, type) => {
-        fetch(`${C.hosts.page[process.env.NODE_ENV]}/api/testcases`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({id, type})
-        });
-    };
 
     return testcases.map((testcase, index) =>
         <div key={index} className="row">
