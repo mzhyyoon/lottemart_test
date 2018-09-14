@@ -5,7 +5,7 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 
-const TestCase = ({children, router, href, user, testcases}) => {
+const TestCase = ({children, router, href, user, testcases, timestamps}) => {
     const onStart = (id, type) => {
         fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases`, {
             method: 'POST',
@@ -16,7 +16,7 @@ const TestCase = ({children, router, href, user, testcases}) => {
             body: JSON.stringify({
                 id,
                 type,
-                userId : user.id
+                userId : user[0].id
             })
         }).then(() => {
             router.push('/testcase');
@@ -42,6 +42,7 @@ const TestCase = ({children, router, href, user, testcases}) => {
                 </div>
                 <RenderTestCase
                     onStart={onStart}
+                    timestamps={timestamps}
                     testcases={testcases} />
             </div>
         </Layout>
@@ -51,22 +52,29 @@ const TestCase = ({children, router, href, user, testcases}) => {
 TestCase.getInitialProps = async () => {
     const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
     const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
+    const timeStampResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/timestamps/${encodeURIComponent('hyyoon')}`);
 
     const userJSONData = await userResponse.json();
     const testcasesJSONData = await testcasesResponse.json();
+    const timeStampJSONData = await timeStampResponse.json();
 
     return {
         user : userJSONData.user,
-        testcases : testcasesJSONData.testcase
+        testcases : testcasesJSONData.testcase,
+        timestamps : timeStampJSONData.timestamp
     };
 };
 
-const RenderTestCase = ({testcases, onStart}) => {
+const RenderTestCase = ({testcases, timestamps, onStart}) => {
     if(isEmpty(testcases)) {
         return (
             <div>{C.messages.noResult}</div>
         )
     }
+
+    const onChangeDate = () => {
+        
+    };
 
     return testcases.map((testcase, index) =>
         <div key={index} className="row">
@@ -75,6 +83,13 @@ const RenderTestCase = ({testcases, onStart}) => {
                     <div className="card-body">
                         <h4 className="card-title">
                             {testcase.type}
+                            <div className="btn-group">
+                                <div className="dropdown-menu" x-placement="bottom-start">
+                                    <a className="dropdown-item">Go back</a>
+                                    <a className="dropdown-item">Delete</a>
+                                    <a className="dropdown-item">Swap</a>
+                                </div>
+                            </div>
                             <button type="button"
                                     className="btn btn-inverse-primary btn-rounded btn-icon float-right"
                                     onClick={(event) => {
@@ -90,7 +105,15 @@ const RenderTestCase = ({testcases, onStart}) => {
                         {testcase.timestamp &&
                         <p className="card-description">
                             <em className="text-muted small">
-                                Last Modify : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                Last Modify : <select onChange={onChangeDate}>
+                                {timestamps.map((timestamp, index) =>
+                                    <option key={index}
+                                            value={timestamp}
+                                            selected={timestamp === testcase.timestamp}>
+                                        {moment(timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                    </option>)
+                                })
+                            </select>
                             </em>
                         </p>
                         }
