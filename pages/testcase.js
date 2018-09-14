@@ -107,20 +107,22 @@ const RenderTestCase = ({testcases, onStart}) => {
                                     <td colSpan={2}>{C.messages.noResult}</td>
                                 </tr>
                             ) : (testcase.result.tests.map((test, index) =>
-                                <tr key={index}>
-                                    <td>{test.title}</td>
-                                    <td>
-                                        {isEmpty(test.err) ? (
-                                            <span className="text-success">
+                                    <tr key={index}>
+                                        <td>
+                                            {test.title}
+                                        </td>
+                                        <td>
+                                            {isEmpty(test.err) ? (
+                                                <span className="text-success">
                                                 Success
                                             </span>
-                                        ) : (
-                                            <span className="text-danger">
+                                            ) : (
+                                                <span className="text-danger">
                                                 Fail
                                             </span>
-                                        )}
-                                    </td>
-                                </tr>
+                                            )}
+                                        </td>
+                                    </tr>
                                 )
                             )}
                             </tbody>
