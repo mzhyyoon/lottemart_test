@@ -4,6 +4,8 @@ import {withRouter} from 'next/router';
 import C from "../constants";
 
 const Index = ({children, router, href, user}) => {
+    console.log(children);
+
     return (
        <Layout user={user}>
            <div className="content-wrapper">
@@ -24,7 +26,8 @@ const Index = ({children, router, href, user}) => {
     );
 };
 
-Index.getInitialProps = async () => {
+Index.getInitialProps = async ({req}) => {
+    console.log('req : ', req);
     const res = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
     const data = await res.json();
 
