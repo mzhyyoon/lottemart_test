@@ -3,6 +3,9 @@ const next = require('next');
 const { parse } = require('url');
 const bodyParser = require('body-parser');
 const timeout = require('connect-timeout');
+const pathMatch = require('path-match');
+const session = require('express-session');
+
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
 const app = next({dir: '.', dev });
@@ -14,19 +17,25 @@ app.prepare().then(() => {
     server.use(timeout('20s'));
     server.use(bodyParser.urlencoded({extended: false}));
     server.use(bodyParser.json());
+    server.use(session({
+        secret: 'super-secret-key',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {maxAge: 60000}
+    }));
+
+    const route = pathMatch();
 
     server.get('/', (req, res) => {
-        const parsedUrl = parse(req.url, true);
-        const { query = {} } = parsedUrl;
-
-        return app.render(req, res, '/' , query);
+        return app.render(req, res, '/' , req.query);
     });
 
-    server.get('/testcase', (req, res) => {
-        const parsedUrl = parse(req.url, true);
-        const { query = {} } = parsedUrl;
+    server.get('/testcases', (req, res) => {
+        return app.render(req, res, '/testcases');
+    });
 
-        return app.render(req, res, '/testcase', query);
+    server.get('/testcases/detail', (req, res) => {
+        return app.render(req, res, '/testcases/detail', res.query);
     });
 
     server.get('*', (req, res) => {

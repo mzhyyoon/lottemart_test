@@ -4,8 +4,9 @@ import {withRouter} from 'next/router';
 import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
+import Link from 'next/link';
 
-const TestCase = ({children, router, href, user, testcases, timestamps}) => {
+const TestCases = ({children, router, href, user, testcases}) => {
     const onStart = (id, type) => {
         fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases`, {
             method: 'POST',
@@ -19,9 +20,9 @@ const TestCase = ({children, router, href, user, testcases, timestamps}) => {
                 userId : user[0].id
             })
         }).then(() => {
-            router.push('/testcase');
+            router.push('/testcases');
         }).catch(() => {
-            router.push('/testcase');
+            router.push('/testcases');
         });
     };
 
@@ -37,44 +38,35 @@ const TestCase = ({children, router, href, user, testcases, timestamps}) => {
                                </span>
                                 Test Case
                             </h3>
+                            <nav aria-label="breadcrumb">
+                                <ol className="breadcrumb">
+                                    <li className="breadcrumb-item">
+                                        <Link href="/">
+                                            <a>Home</a>
+                                        </Link>
+                                    </li>
+                                    <li className="breadcrumb-item active" aria-current="page">
+                                        Test Case
+                                    </li>
+                                </ol>
+                            </nav>
                         </div>
                     </div>
                 </div>
                 <RenderTestCase
                     onStart={onStart}
-                    timestamps={timestamps}
                     testcases={testcases} />
             </div>
         </Layout>
     );
 };
 
-TestCase.getInitialProps = async () => {
-    const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
-    const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
-    const timeStampResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/timestamps/${encodeURIComponent('hyyoon')}`);
-
-    const userJSONData = await userResponse.json();
-    const testcasesJSONData = await testcasesResponse.json();
-    const timeStampJSONData = await timeStampResponse.json();
-
-    return {
-        user : userJSONData.user,
-        testcases : testcasesJSONData.testcase,
-        timestamps : timeStampJSONData.timestamp
-    };
-};
-
-const RenderTestCase = ({testcases, timestamps, onStart}) => {
+const RenderTestCase = ({testcases, onStart}) => {
     if(isEmpty(testcases)) {
         return (
             <div>{C.messages.noResult}</div>
         )
     }
-
-    const onChangeDate = () => {
-        
-    };
 
     return testcases.map((testcase, index) =>
         <div key={index} className="row">
@@ -82,14 +74,9 @@ const RenderTestCase = ({testcases, timestamps, onStart}) => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">
-                            {testcase.type}
-                            <div className="btn-group">
-                                <div className="dropdown-menu" x-placement="bottom-start">
-                                    <a className="dropdown-item">Go back</a>
-                                    <a className="dropdown-item">Delete</a>
-                                    <a className="dropdown-item">Swap</a>
-                                </div>
-                            </div>
+                            <Link href={{pathname : `/testcases/detail`, query : {type :testcase.type} }}>
+                                {testcase.type}
+                            </Link>
                             <button type="button"
                                     className="btn btn-inverse-primary btn-rounded btn-icon float-right"
                                     onClick={(event) => {
@@ -105,34 +92,30 @@ const RenderTestCase = ({testcases, timestamps, onStart}) => {
                         {testcase.timestamp &&
                         <p className="card-description">
                             <em className="text-muted small">
-                                Last Modify : <select onChange={onChangeDate}>
-                                {timestamps.map((timestamp, index) =>
-                                    <option key={index}
-                                            value={timestamp}
-                                            selected={timestamp === testcase.timestamp}>
-                                        {moment(timestamp).format('YYYY-MM-DD HH:mm:ss')}
-                                    </option>)
-                                })
-                            </select>
+                                Last Modify : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                             </em>
                         </p>
                         }
-                        <table className="table">
+                        <table className="table table-hover">
                             <thead>
                             <tr>
                                 <th>Describe</th>
+                                <th>Date</th>
                                 <th>Result</th>
                             </tr>
                             </thead>
                             <tbody>
                             {isEmpty(testcase.result) ? (
                                 <tr>
-                                    <td colSpan={2}>{C.messages.noResult}</td>
+                                    <td colSpan={3}>{C.messages.noResult}</td>
                                 </tr>
                             ) : (testcase.result.tests.map((test, index) =>
                                     <tr key={index}>
                                         <td>
                                             {test.title}
+                                        </td>
+                                        <td>
+                                            {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                                         </td>
                                         <td>
                                             {isEmpty(test.err) ? (
@@ -157,4 +140,17 @@ const RenderTestCase = ({testcases, timestamps, onStart}) => {
     );
 };
 
-export default withRouter(TestCase);
+TestCases.getInitialProps = async () => {
+    const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
+    const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
+
+    const userJSONData = await userResponse.json();
+    const testcasesJSONData = await testcasesResponse.json();
+
+    return {
+        user : userJSONData.user,
+        testcases : testcasesJSONData.testcase
+    };
+};
+
+export default withRouter(TestCases);

@@ -3,7 +3,7 @@ import ActiveNav from '../../ActiveNav';
 
 const Home = () => {
     return (
-        <ActiveNav href={"/"}>
+        <ActiveNav href={"/home"}>
             <Link href="/">
                 <a className="nav-link">
                     <span className="menu-title">Home</span>
