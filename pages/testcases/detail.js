@@ -71,7 +71,7 @@ const RenderDetail = ({testcases, type}) => {
                                 </em>
                                 <table className="table table-hover">
                                     <thead>
-                                        <tr class="table-info">
+                                        <tr className="table-info">
                                             <th>Describe</th>
                                             <th>Date</th>
                                             <th>Result</th>
