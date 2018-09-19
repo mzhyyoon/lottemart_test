@@ -109,7 +109,20 @@ const RenderTestCase = ({testcases, onStart}) => {
                                 <tr>
                                     <td colSpan={3}>{C.messages.noResult}</td>
                                 </tr>
-                            ) : (testcase.result.tests.map((test, index) =>
+                            ) : (testcase.result.tests.length === 0  ? testcase.result.failures.map((errors, index) =>
+                                    <tr key={index}>
+                                        <td>{errors.fullTitle}</td>
+                                        <td>
+                                            {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                        </td>
+                                        <td>
+                                            <span className="text-danger">
+                                                Fail
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    ):
+                                (testcase.result.tests.map((test, index) =>
                                     <tr key={index}>
                                         <td>
                                             {test.title}
@@ -124,11 +137,12 @@ const RenderTestCase = ({testcases, onStart}) => {
                                             </span>
                                             ) : (
                                                 <span className="text-danger">
-                                                Fail
-                                            </span>
+                                                    Fail
+                                                </span>
                                             )}
                                         </td>
                                     </tr>
+                                )
                                 )
                             )}
                             </tbody>

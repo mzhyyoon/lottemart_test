@@ -78,7 +78,25 @@ const RenderDetail = ({testcases, type}) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {testcase.result.tests.map((test, index) =>
+                                    {testcase.result.tests.length === 0 ? testcase.result.failures.map((errors, index) =>
+                                        <tr key={index}>
+                                            <td>
+                                                <h6>
+                                                    {errors.fullTitle}
+                                                    <div>
+                                                        <hr/>
+                                                        <ul className="list-star text-muted">
+                                                            <li className="text-danger">{errors.err.message}</li>
+                                                        </ul>
+                                                    </div>
+                                                </h6>
+                                            </td>
+                                            <td>{moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                            <td>
+                                                <span className="text-danger">Fail</span>
+                                            </td>
+                                        </tr>
+                                    ) : testcase.result.tests.map((test, index) =>
                                         <tr key={index}>
                                             <td>
                                                 <h6>
