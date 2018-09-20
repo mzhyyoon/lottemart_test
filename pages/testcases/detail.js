@@ -84,7 +84,7 @@ class TestCasesDetail extends React.Component {
         const currentPage = Number(page);
 
         return (
-            <Layout user={user}>
+            <Layout user={user} fetching={fetching}>
                 <div className="content-wrapper">
                     <div className="row">
                         <div className="col-12">

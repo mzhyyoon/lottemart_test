@@ -2,8 +2,9 @@ import Head from 'next/head';
 import C from '../constants';
 import NavBarContainer from "./navbars/containers";
 import SideBarContainer from "./sidebars/containers";
+import Spinner from "./Spinner";
 
-const Layout = ({children, user}) => {
+const Layout = ({children, user, fetching}) => {
     return (
         <div>
             <Head>
@@ -20,6 +21,7 @@ const Layout = ({children, user}) => {
                     <SideBarContainer user={user}/>
                     <div className="main-panel">
                         {children}
+                        <Spinner isActive={fetching}/>
                     </div>
                 </div>
             </div>

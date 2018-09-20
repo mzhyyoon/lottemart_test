@@ -70,7 +70,7 @@ class TestCases extends React.Component {
         } = this.state;
 
         return (
-            <Layout user={user}>
+            <Layout user={user} fetching={fetching}>
                 <div className="content-wrapper">
                     <div className="row">
                         <div className="col-12">
@@ -100,7 +100,6 @@ class TestCases extends React.Component {
                         onStart={this.onStart}
                         testcases={testcases}/>
                 </div>
-                <Spinner isActive={fetching}/>
             </Layout>
         );
     }

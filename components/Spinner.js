@@ -8,7 +8,7 @@ const Spinner = ({isActive}) => (
             height: 100px;
             left: 0;
             margin: auto;
-            position: absolute;
+            position: fixed;
             right: 0;
             top: 0;
             width: 100px;
@@ -94,6 +94,7 @@ const Spinner = ({isActive}) => (
             background: #ff0095 none repeat scroll 0 0;
         }
         #loader .loading {
+            background-color:#fff;
             bottom: 35%;
             height: 20px;
             left: 25%;
