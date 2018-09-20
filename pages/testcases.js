@@ -5,7 +5,6 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 import Link from 'next/link';
-import Spinner from '../components/Spinner';
 
 class TestCases extends React.Component {
     static async getInitialProps () {
