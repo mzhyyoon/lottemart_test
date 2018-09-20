@@ -5,9 +5,40 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 import Link from 'next/link';
+import Spinner from '../components/Spinner';
 
-const TestCases = ({children, router, href, user, testcases}) => {
-    const onStart = (id, type) => {
+class TestCases extends React.Component {
+    static async getInitialProps () {
+        const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
+        const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
+
+        const userJSONData = await userResponse.json();
+        const testcasesJSONData = await testcasesResponse.json();
+
+        return {
+            user : userJSONData.user,
+            testcases : testcasesJSONData.testcase
+        };
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            fetching: false
+        };
+    }
+
+    onStart = (id, type) => {
+        const {
+            user,
+            router
+        } = this.props;
+
+        this.setState({
+            fetching: true
+        });
+
         fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases`, {
             method: 'POST',
             headers: {
@@ -17,48 +48,62 @@ const TestCases = ({children, router, href, user, testcases}) => {
             body: JSON.stringify({
                 id,
                 type,
-                userId : user[0].id
+                userId: user[0].id
             })
         }).then(() => {
-            router.push('/testcases');
-        }).catch(() => {
+            this.setState({
+                fetching: false
+            });
             router.push('/testcases');
         });
     };
 
-    return (
-        <Layout user={user}>
-            <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-12">
-                        <div className="page-header">
-                            <h3 className="page-title">
+    render() {
+        const {
+            user,
+            testcases
+        } = this.props;
+
+
+        const {
+            fetching
+        } = this.state;
+
+        return (
+            <Layout user={user}>
+                <div className="content-wrapper">
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="page-header">
+                                <h3 className="page-title">
                                <span className="page-title-icon bg-gradient-primary text-white mr-2">
                                    <i className="mdi mdi-playlist-check"></i>
                                </span>
-                                Test Case
-                            </h3>
-                            <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item">
-                                        <Link href="/">
-                                            <a>Home</a>
-                                        </Link>
-                                    </li>
-                                    <li className="breadcrumb-item active" aria-current="page">
-                                        Test Case
-                                    </li>
-                                </ol>
-                            </nav>
+                                    Test Case
+                                </h3>
+                                <nav aria-label="breadcrumb">
+                                    <ol className="breadcrumb">
+                                        <li className="breadcrumb-item">
+                                            <Link href="/">
+                                                <a>Home</a>
+                                            </Link>
+                                        </li>
+                                        <li className="breadcrumb-item active" aria-current="page">
+                                            Test Case
+                                        </li>
+                                    </ol>
+                                </nav>
+                            </div>
                         </div>
                     </div>
+                    <RenderTestCase
+                        onStart={this.onStart}
+                        testcases={testcases}/>
                 </div>
-                <RenderTestCase
-                    onStart={onStart}
-                    testcases={testcases} />
-            </div>
-        </Layout>
-    );
+                <Spinner isActive={fetching}/>
+            </Layout>
+        );
+    }
 };
 
 const RenderTestCase = ({testcases, onStart}) => {
@@ -152,19 +197,6 @@ const RenderTestCase = ({testcases, onStart}) => {
             </div>
         </div>
     );
-};
-
-TestCases.getInitialProps = async () => {
-    const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
-    const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
-
-    const userJSONData = await userResponse.json();
-    const testcasesJSONData = await testcasesResponse.json();
-
-    return {
-        user : userJSONData.user,
-        testcases : testcasesJSONData.testcase
-    };
 };
 
 export default withRouter(TestCases);
