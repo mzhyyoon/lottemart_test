@@ -9,7 +9,7 @@ const constants = {
     hosts : {
         page : {
             development: 'http://localhost:3000',
-            production: 'https://lottemarttddtest.herokuapp.com'
+            production: 'https://megazonetester.herokuapp.com'
         },
         api : {
             development: 'http://localhost:3001',
