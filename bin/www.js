@@ -1,9 +1,7 @@
 const express = require('express');
 const next = require('next');
-const { parse } = require('url');
 const bodyParser = require('body-parser');
 const timeout = require('connect-timeout');
-const pathMatch = require('path-match');
 const session = require('express-session');
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -24,8 +22,6 @@ app.prepare().then(() => {
         cookie: {maxAge: 60000}
     }));
 
-    const route = pathMatch();
-
     server.get('/', (req, res) => {
         return app.render(req, res, '/' , req.query);
     });
@@ -36,6 +32,14 @@ app.prepare().then(() => {
 
     server.get('/testcases/detail', (req, res) => {
         return app.render(req, res, '/testcases/detail', res.query);
+    });
+
+    server.get('/signin', (req, res) => {
+        return app.render(req, res, '/signin', res.query);
+    });
+
+    server.get('/password_reset', (req, res) => {
+        return app.render(req, res, '/password_reset', res.query);
     });
 
     server.get('*', (req, res) => {

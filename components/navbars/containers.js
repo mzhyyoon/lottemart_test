@@ -8,7 +8,7 @@ import SignOut from './ui/SignOut';
 
 const NavBarContainer = ({user}) => (
     <nav className="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <Logo type="lottemart"/>
+        <Logo/>
         <div className="navbar-menu-wrapper d-flex align-items-stretch">
             <Search/>
             <ul className="navbar-nav navbar-nav-right">

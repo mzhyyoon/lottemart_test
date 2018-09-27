@@ -118,7 +118,7 @@ const RenderTestCase = ({testcases, onStart}) => {
                     <div className="card-body">
                         <h4 className="card-title">
                             <Link href={{pathname : `/testcases/detail`, query : {type :testcase.type} }}>
-                                {testcase.type}
+                                <a>{testcase.type}</a>
                             </Link>
                             <button type="button"
                                     className="btn btn-inverse-primary btn-rounded btn-icon float-right"
