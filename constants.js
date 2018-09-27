@@ -13,7 +13,7 @@ const constants = {
         },
         api : {
             development: 'http://localhost:3001',
-            production : 'https://api-tdd-test.herokuapp.com'
+            production : 'https://api-megazonetester.herokuapp.com'
         }
     },
     messages : {
