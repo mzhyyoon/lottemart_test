@@ -5,18 +5,31 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 import Link from 'next/link';
+import Cookies from "js-cookie";
+import getHost from "../assets/js/get-hosts";
 
 class TestCases extends React.Component {
-    static async getInitialProps () {
-        const userResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`);
-        const testcasesResponse = await fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}`);
+    static async getInitialProps ({req}) {
+        let uuid;
+
+        if(req && req.cookies) {
+            uuid = req.cookies.uuid;
+        } else {
+            uuid = Cookies.get('uuid');
+        }
+
+        const userResponse = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/user/${uuid}`, {
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
 
         const userJSONData = await userResponse.json();
-        const testcasesJSONData = await testcasesResponse.json();
 
         return {
-            user : userJSONData.user,
-            testcases : testcasesJSONData.testcase
+            user : [userJSONData]
         };
     }
 
@@ -24,21 +37,38 @@ class TestCases extends React.Component {
         super(props);
 
         this.state = {
-            fetching: false
+            fetching: false,
+            testcase : []
         };
+    }
+
+    async componentDidMount() {
+        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase/${this.props.user[0].id}`,{
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        const jsonData = await response.json();
+
+        this.setState({
+            ...this.state,
+            testcase: jsonData.data.testcase
+        });
     }
 
     onStart = (id, type) => {
         const {
-            user,
             router
         } = this.props;
 
         this.setState({
+            ...this.state,
             fetching: true
         });
 
-        fetch(`${C.hosts.api[process.env.NODE_ENV]}/testcases`, {
+        fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -46,11 +76,17 @@ class TestCases extends React.Component {
             },
             body: JSON.stringify({
                 id,
-                type,
-                userId: user[0].id
+                type
             })
         }).then(() => {
             this.setState({
+                ...this.state,
+                fetching: false
+            });
+            router.push('/testcases');
+        }).catch(() => {
+            this.setState({
+                ...this.state,
                 fetching: false
             });
             router.push('/testcases');
@@ -59,13 +95,12 @@ class TestCases extends React.Component {
 
     render() {
         const {
-            user,
-            testcases
+            user
         } = this.props;
 
-
         const {
-            fetching
+            fetching,
+            testcase
         } = this.state;
 
         return (
@@ -97,45 +132,45 @@ class TestCases extends React.Component {
                     </div>
                     <RenderTestCase
                         onStart={this.onStart}
-                        testcases={testcases}/>
+                        testcase={testcase}/>
                 </div>
             </Layout>
         );
     }
 };
 
-const RenderTestCase = ({testcases, onStart}) => {
-    if(isEmpty(testcases)) {
+const RenderTestCase = ({testcase, onStart}) => {
+    if(isEmpty(testcase)) {
         return (
             <div>{C.messages.noResult}</div>
         )
     }
 
-    return testcases.map((testcase, index) =>
+    return testcase.map((tc, index) =>
         <div key={index} className="row">
             <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">
-                            <Link href={{pathname : `/testcases/detail`, query : {type :testcase.type} }}>
-                                <a>{testcase.type}</a>
+                            <Link href={{pathname : `/testcases/detail`, query : {type :tc.type} }}>
+                                <a>{tc.type}</a>
                             </Link>
                             <button type="button"
                                     className="btn btn-inverse-primary btn-rounded btn-icon float-right"
                                     onClick={(event) => {
                                         event.preventDefault();
                                         onStart(
-                                            testcase._id,
-                                            testcase.type.toLowerCase()
+                                            tc.id,
+                                            tc.type.toLowerCase()
                                         );
                                     }}>
                                 <i className="mdi mdi-arrow-right-drop-circle-outline"></i>
                             </button>
                         </h4>
-                        {testcase.timestamp &&
+                        {tc.timestamp &&
                         <p className="card-description">
                             <em className="text-muted small">
-                                Last Modify : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                Last Modify : {moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                             </em>
                         </p>
                         }
@@ -148,15 +183,15 @@ const RenderTestCase = ({testcases, onStart}) => {
                             </tr>
                             </thead>
                             <tbody>
-                            {isEmpty(testcase.result) ? (
+                            {isEmpty(tc.result) ? (
                                 <tr>
                                     <td colSpan={3}>{C.messages.noResult}</td>
                                 </tr>
-                            ) : (testcase.result.tests.length === 0  ? testcase.result.failures.map((errors, index) =>
+                            ) : (tc.result.tests.length === 0  ? tc.result.failures.map((errors, index) =>
                                     <tr key={index}>
                                         <td>{errors.fullTitle}</td>
                                         <td>
-                                            {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                            {moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                                         </td>
                                         <td>
                                             <span className="text-danger">
@@ -165,13 +200,13 @@ const RenderTestCase = ({testcases, onStart}) => {
                                         </td>
                                     </tr>
                                     ):
-                                (testcase.result.tests.map((test, index) =>
+                                (tc.result.tests.map((test, index) =>
                                     <tr key={index}>
                                         <td>
                                             {test.title}
                                         </td>
                                         <td>
-                                            {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                            {moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                                         </td>
                                         <td>
                                             {isEmpty(test.err) ? (

@@ -2,9 +2,10 @@ import Layout from "../../components/Layout";
 import 'isomorphic-unfetch';
 import {withRouter} from 'next/router';
 import Link from "next/link";
-import C from "../../constants";
 import moment from 'moment';
 import isEmpty from "../../assets/js/is-empty";
+import Cookies from "js-cookie";
+import getHost from "../../assets/js/get-hosts";
 
 const PER_PAGE = 10;
 
@@ -12,21 +13,26 @@ class TestCasesDetail extends React.Component {
     static async getInitialProps ({req, query}) {
         let type = req ? req.query.type : query.type;
         let page = req ? req.query.page : query.page;
+        let uuid;
 
-        const userResponse = await fetch(
-            `${C.hosts.api[process.env.NODE_ENV]}/users/${encodeURIComponent('hyyoon')}`
-        );
-        const testcasesResponse = await fetch(
-            `${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}?type=${type}&page=${page || 1}&per=${PER_PAGE}`
-        );
+        if(req && req.cookies) {
+            uuid = req.cookies.uuid;
+        } else {
+            uuid = Cookies.get('uuid');
+        }
 
-        const userJSONData = await userResponse.json();
-        const testcasesJSONData = await testcasesResponse.json();
+        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/user/${uuid}`, {
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        const data = await response.json();
 
         return {
-            user : userJSONData.user,
-            testcases : testcasesJSONData.testcase,
-            totalCount : testcasesJSONData.totalCount,
+            user : [data],
             type,
             page
         };
@@ -36,13 +42,35 @@ class TestCasesDetail extends React.Component {
         super(props);
 
         this.state = {
-            testcases: this.props.testcases,
+            testcases: [],
+            totalCount : 0,
             page: this.props.page || 1,
             fetching : false
         };
     }
 
-    onGetList = (type, page = 1) => {
+    async componentDidMount() {
+        const {
+            user,
+            type,
+            page
+        } = this.props;
+
+        const response = await fetch(
+            `${getHost('page', process.env.NODE_ENV)}/api/testcases/${user[0].id}/${type}/${page || 1}/${PER_PAGE}`
+        );
+
+        const responseJSON = await response.json();
+        const {totalCount, testcase} = responseJSON.data;
+
+        this.setState({
+            ...this.state,
+            totalCount,
+            testcases : testcase
+        });
+    }
+
+    onGetList = (id, type, page = 1) => {
         if(!page){
             return;
         }
@@ -54,15 +82,15 @@ class TestCasesDetail extends React.Component {
         });
 
         fetch(
-            `${C.hosts.api[process.env.NODE_ENV]}/testcases/${encodeURIComponent('hyyoon')}?type=${type}&page=${page}&per=${PER_PAGE}`
+            `${getHost('page', process.env.NODE_ENV)}/api/testcases/${id}/${type}/${page}/${PER_PAGE}`
         ).then((res) => res.json())
-            .then((data) => {
+            .then((responseJSON) => {
                 this.setState({
                     page,
                     fetching : false,
                     testcases: [
                         ...this.state.testcases,
-                        ...data.testcase
+                        ...responseJSON.data.testcase
                     ]
                 });
             })
@@ -71,12 +99,12 @@ class TestCasesDetail extends React.Component {
     render() {
         const {
             user,
-            type,
-            totalCount
+            type
         } = this.props;
 
         const {
             testcases,
+            totalCount,
             page,
             fetching
         } = this.state;
@@ -121,7 +149,7 @@ class TestCasesDetail extends React.Component {
                         <div className="col-12 text-center">
                             <button onClick={(event) => {
                                 event.preventDefault();
-                                this.onGetList(type, currentPage);
+                                this.onGetList(user[0].id, type, currentPage);
                             }}
                                     disabled={(currentPage * PER_PAGE >= totalCount) || fetching}
                                     type="button"
@@ -137,6 +165,9 @@ class TestCasesDetail extends React.Component {
 };
 
 const RenderDetail = ({testcases, type}) => {
+    if(!testcases) {
+        return null;
+    }
     return (
         <div className="row">
             <div className="col-lg-12 grid-margin stretch-card">
@@ -146,10 +177,10 @@ const RenderDetail = ({testcases, type}) => {
                             {type}
                         </h4>
                         <ul className="list-arrow">
-                        {testcases.map((testcase, index) =>
+                        {testcases.map((tc, index) =>
                             <li key={index}>
                                 <em className="font-weight-bold text-muted small">
-                                    Date : {moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}
+                                    Date : {moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}
                                 </em>
                                 <table className="table table-hover">
                                     <thead>
@@ -160,7 +191,7 @@ const RenderDetail = ({testcases, type}) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {testcase.result.tests.length === 0 ? testcase.result.failures.map((errors, index) =>
+                                    {tc.result.tests.length === 0 ? tc.result.failures.map((errors, index) =>
                                         <tr key={index}>
                                             <td>
                                                 <h6>
@@ -173,12 +204,12 @@ const RenderDetail = ({testcases, type}) => {
                                                     </div>
                                                 </h6>
                                             </td>
-                                            <td>{moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                            <td>{moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
                                             <td>
                                                 <span className="text-danger">Fail</span>
                                             </td>
                                         </tr>
-                                    ) : testcase.result.tests.map((test, index) =>
+                                    ) : tc.result.tests.map((test, index) =>
                                         <tr key={index}>
                                             <td>
                                                 <h6>
@@ -194,7 +225,7 @@ const RenderDetail = ({testcases, type}) => {
                                                     </ul>
                                                 </div>
                                             </td>
-                                            <td>{moment(testcase.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                            <td>{moment(tc.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
                                             <td>
                                                 {isEmpty(test.err) ? (
                                                     <span className="text-success">

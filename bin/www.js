@@ -1,8 +1,11 @@
 const express = require('express');
 const next = require('next');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const timeout = require('connect-timeout');
 const session = require('express-session');
+const apiRoutes = require('../server/routes/apiRoutes');
+const CryptoJS = require('crypto-js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
@@ -13,25 +16,34 @@ app.prepare().then(() => {
     const server = express();
 
     server.use(timeout('20s'));
+    server.use(cookieParser());
     server.use(bodyParser.urlencoded({extended: false}));
     server.use(bodyParser.json());
-    server.use(session({
-        secret: 'super-secret-key',
-        resave: false,
-        saveUninitialized: false,
-        cookie: {maxAge: 60000}
-    }));
+
+    server.use('/api', apiRoutes);
 
     server.get('/', (req, res) => {
-        return app.render(req, res, '/' , req.query);
+        if(!req.cookies.uuid) {
+            return res.redirect('/signin');
+        } else {
+            return app.render(req, res, '/', req.query);
+        }
     });
 
     server.get('/testcases', (req, res) => {
-        return app.render(req, res, '/testcases');
+        if(!req.cookies.uuid) {
+            return res.redirect('/signin');
+        } else {
+            return app.render(req, res, '/testcases');
+        }
     });
 
     server.get('/testcases/detail', (req, res) => {
-        return app.render(req, res, '/testcases/detail', res.query);
+        if(!req.cookies.uuid) {
+            return res.redirect('/signin');
+        } else {
+            return app.render(req, res, '/testcases/detail', res.query);
+        }
     });
 
     server.get('/signin', (req, res) => {

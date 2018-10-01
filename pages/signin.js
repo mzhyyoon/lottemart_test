@@ -20,42 +20,52 @@ class Signin extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextState.email.valid !== this.state.email.valid) {
+        if((nextState.email.valid !== this.state.email.valid)
+            || (nextState.email.value !== this.state.email.value)) {
             return true;
         }
-        if(nextState.email.value !== this.state.email.value) {
-            return true;
-        }
-        if(nextState.password.valid !== this.state.password.valid) {
-            return true;
-        }
-        if(nextState.password.value !== this.state.password.value) {
+        if((nextState.password.valid !== this.state.password.valid)
+            || (nextState.password.value !== this.state.password.value)) {
             return true;
         }
         return false;
     }
 
-    onSubmit = ($form) => {
-        console.log('onSubmit!!');
+    onBlur = (event) => {
+        const name = event.target.name;
 
         this.setState({
-            email: {
-                ...this.state.email,
-                valid: $form.email.checkValidity()
-            },
-            password : {
-                ...this.state.password,
-                valid : $form.password.checkValidity()
+            [name]: {
+                ...this.state[name],
+                valid: event.target.checkValidity()
             }
         });
     };
 
-    onInValid = (event) => {
-        event.preventDefault();
+    onSubmit = ($form) => {
+        const email = $form.email.value;
+        const password = $form.password.value;
 
-        console.log('onInValid');
-        console.log(event.target.checkValidity());
+        fetch('/api/signin', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: encodeURIComponent(email),
+                password: encodeURIComponent(password)
+            })
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            if(!data.success) {
+                window.alert(data.errors.message);
+                return;
+            }
 
+            this.props.router.replace('/');
+        });
     };
 
     render () {
@@ -77,7 +87,6 @@ class Signin extends React.Component {
                         visibility : hidden;
                     }
                     span.error-message.active {
-                        color : #FDD;
                         visibility : visible;
                     }
                 `}</style>
@@ -91,7 +100,8 @@ class Signin extends React.Component {
                                                  alt={"megazone testser."}/>
                                         </div>
                                         <h6 className={"font-weight-light"}>Sign in to Megazone Tester</h6>
-                                        <form className={"pt-3"}
+                                        <form id={"frmSignin"}
+                                              className={"pt-3"}
                                               onSubmit={(event) => {
                                                   event.preventDefault();
                                                   this.onSubmit(event.target);
@@ -101,7 +111,8 @@ class Signin extends React.Component {
                                                        name={"email"}
                                                        className={"form-control from-control-lg" + (email.valid === false ? ' error' : '')}
                                                        placeholder={"email address"}
-                                                       onInValid={(event) => this.onInValid(event)}
+                                                       onInvalid={(event) => event.preventDefault()}
+                                                       onBlur={(event) => this.onBlur(event)}
                                                        onInput={(event) => {
                                                            this.setState({
                                                                email: {
@@ -112,13 +123,17 @@ class Signin extends React.Component {
                                                        }}
                                                        value={email.value}
                                                        required/>
+                                                <span className={"error-message text-danger" + (email.valid === false ? ' active' : '')}>
+                                                    Please check your email.
+                                                </span>
                                             </div>
                                             <div className={"form-group"}>
                                                 <input type={"password"}
                                                        name={"password"}
                                                        className={"form-control form-control-lg"+ (password.valid === false ? ' error' : '')}
                                                        placeholder={"Password"}
-                                                       onInValid={(event) => this.onInValid(event)}
+                                                       onInvalid={(event) => event.preventDefault()}
+                                                       onBlur={(event) => this.onBlur(event)}
                                                        onInput={(event) => {
                                                            this.setState({
                                                                password: {
@@ -129,6 +144,9 @@ class Signin extends React.Component {
                                                        }}
                                                        value={password.value}
                                                        required/>
+                                                <span className={"error-message text-danger" + (password.valid === false ? ' active' : '')}>
+                                                    Please check your password.
+                                                </span>
                                             </div>
                                             <div className={"mt-3"}>
                                                 <button type={"submit"}
@@ -137,8 +155,11 @@ class Signin extends React.Component {
                                                 </button>
                                             </div>
                                             <div className={"my-2 d-flex justify-content-between align-items-center"}>
+                                                <div className={"font-weight-light"}>
+                                                    Don't have an account? <Link href={"/signup"}><a>Create</a></Link>
+                                                </div>
                                                 <Link href={"/password_reset"}>
-                                                    <a className={"auth-link text-black"}>
+                                                    <a className={"auth-link font-weight-light text-black"}>
                                                         Forgot password?
                                                     </a>
                                                 </Link>
