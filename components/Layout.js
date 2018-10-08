@@ -19,7 +19,7 @@ const Layout = ({children, user, test, fetching}) => {
                 <NavBarContainer user={user}/>
                 <div className="container-fluid page-body-wrapper">
                     <SideBarContainer user={user}/>
-                    <div className="main-panel">
+                    <div className={"main-panel" + (fetching ? ' dimmed' : '')}>
                         {children}
                         <Spinner isActive={fetching}/>
                     </div>

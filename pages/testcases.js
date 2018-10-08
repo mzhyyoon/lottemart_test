@@ -13,7 +13,7 @@ class TestCases extends React.Component {
         super(props);
 
         this.state = {
-            fetching: false,
+            fetching: true,
             testcase : []
         };
     }
@@ -30,7 +30,8 @@ class TestCases extends React.Component {
 
         this.setState({
             ...this.state,
-            testcase: jsonData.data.testcase
+            testcase: jsonData.data.testcase,
+            fetching : false
         });
     }
 
@@ -107,6 +108,7 @@ class TestCases extends React.Component {
                         </div>
                     </div>
                     <RenderTestCase
+                        fetching={this.state.fetching}
                         onStart={this.onStart}
                         testcase={testcase}/>
                 </div>
@@ -115,10 +117,12 @@ class TestCases extends React.Component {
     }
 };
 
-const RenderTestCase = ({testcase, onStart}) => {
-    if(isEmpty(testcase)) {
+const RenderTestCase = ({testcase, fetching, onStart}) => {
+    if(isEmpty(testcase) && !fetching) {
         return (
-            <div>{C.messages.noResult}</div>
+            <div>
+                {C.messages.noResult}
+            </div>
         )
     }
 
