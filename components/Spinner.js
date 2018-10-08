@@ -94,13 +94,11 @@ const Spinner = ({isActive}) => (
             background: #ff0095 none repeat scroll 0 0;
         }
         #loader .loading {
-            background-color:#fff;
             bottom: 35%;
             height: 20px;
             left: 25%;
             position: absolute;
             right: 0;
-            width: 180px;
         }
         @keyframes load {
         100% {

@@ -4,7 +4,7 @@ import NavBarContainer from "./navbars/containers";
 import SideBarContainer from "./sidebars/containers";
 import Spinner from "./Spinner";
 
-const Layout = ({children, user, fetching}) => {
+const Layout = ({children, user, test, fetching}) => {
     return (
         <div>
             <Head>
@@ -27,5 +27,11 @@ const Layout = ({children, user, fetching}) => {
             </div>
         </div>
     );
+};
+
+Layout.getInitialProps = ({req}) => {
+    return {
+        test: '1'
+    }
 };
 export default Layout;

@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const router = express.Router();
 const uuidv5 = require('uuid/v5');
 const redis = require('redis');
+const isEmpty = require('../../bin/is-empty');
 
 const client = redis.createClient('redis://h:pacc5258add8616497c4187cd6ed453cc70f5a254718bd197973f320e196d4fff@ec2-18-214-176-192.compute-1.amazonaws.com:53689');
 
@@ -15,10 +16,28 @@ client.on('error', (err) => {
     console.log('Redis Error : ', err);
 });
 
+router.post('/token', (req, res) => {
+    const uuid = uuidv5(req.body.email, ['1', 'q', '2', 'w', '3', 'e', '4', 'r', '5', 't', '6', 'y', '7', 'u', '8', 'i']);
+
+    res.status(200)
+        .json({
+            id_token : uuid
+        })
+        .end();
+});
+
 router.get('/user/:uuid', (req, res) => {
     const uuid = req.params.uuid;
 
     client.hgetall(uuid, (err, obj) => {
+        if(isEmpty(obj) || !obj) {
+            res.status(401).json({
+                success : false,
+                error : 'session termiated.'
+            }).end();
+            return;
+        }
+
         const {
             _id,
             email,
@@ -29,6 +48,7 @@ router.get('/user/:uuid', (req, res) => {
             position,
             profileImage
         } = obj;
+
         res.status(200)
             .json({
                 _id,
@@ -79,8 +99,7 @@ router.post('/signin', (req, res) => {
                 } = user;
 
                 res.cookie('uuid', uuid, {
-                    path : '/',
-                    expires : new Date(Date.now() + 600000)
+                    path : '/'
                 });
 
                 client.hmset(uuid, {
@@ -99,6 +118,7 @@ router.post('/signin', (req, res) => {
                         })
                         .end();
                 });
+                client.expire(uuid, 60 * 60 * 24);
             } else {
                 res.status(200)
                     .json({

@@ -5,34 +5,10 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 import Link from 'next/link';
-import Cookies from "js-cookie";
 import getHost from "../assets/js/get-hosts";
+import Authorization from "../components/utils/Authorization";
 
 class TestCases extends React.Component {
-    static async getInitialProps ({req}) {
-        let uuid;
-
-        if(req && req.cookies) {
-            uuid = req.cookies.uuid;
-        } else {
-            uuid = Cookies.get('uuid');
-        }
-
-        const userResponse = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/user/${uuid}`, {
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-
-        const userJSONData = await userResponse.json();
-
-        return {
-            user : [userJSONData]
-        };
-    }
-
     constructor(props) {
         super(props);
 
@@ -232,4 +208,4 @@ const RenderTestCase = ({testcase, onStart}) => {
     );
 };
 
-export default withRouter(TestCases);
+export default withRouter(Authorization(TestCases));

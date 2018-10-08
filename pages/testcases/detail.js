@@ -4,40 +4,12 @@ import {withRouter} from 'next/router';
 import Link from "next/link";
 import moment from 'moment';
 import isEmpty from "../../assets/js/is-empty";
-import Cookies from "js-cookie";
 import getHost from "../../assets/js/get-hosts";
+import Authorization from "../../components/utils/Authorization";
 
 const PER_PAGE = 10;
 
 class TestCasesDetail extends React.Component {
-    static async getInitialProps ({req, query}) {
-        let type = req ? req.query.type : query.type;
-        let page = req ? req.query.page : query.page;
-        let uuid;
-
-        if(req && req.cookies) {
-            uuid = req.cookies.uuid;
-        } else {
-            uuid = Cookies.get('uuid');
-        }
-
-        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/user/${uuid}`, {
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        });
-
-        const data = await response.json();
-
-        return {
-            user : [data],
-            type,
-            page
-        };
-    }
-
     constructor(props) {
         super(props);
 
@@ -45,7 +17,7 @@ class TestCasesDetail extends React.Component {
             testcases: [],
             totalCount : 0,
             page: this.props.page || 1,
-            fetching : false
+            fetching : true
         };
     }
 
@@ -66,7 +38,8 @@ class TestCasesDetail extends React.Component {
         this.setState({
             ...this.state,
             totalCount,
-            testcases : testcase
+            testcases : testcase,
+            fetching : false
         });
     }
 
@@ -251,4 +224,4 @@ const RenderDetail = ({testcases, type}) => {
     );
 };
 
-export default withRouter(TestCasesDetail);
+export default withRouter(Authorization(TestCasesDetail));
