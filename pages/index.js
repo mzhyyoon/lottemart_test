@@ -22,4 +22,4 @@ const Index = ({user}) => (
     </Layout>
 );
 
-export default withRouter(Authorization(Index));
+export default Authorization(withRouter(Index));

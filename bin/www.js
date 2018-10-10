@@ -72,6 +72,10 @@ app.prepare().then(() => {
         return app.render(req, res, '/signin', res.query);
     });
 
+    server.get('/logout', (req, res) => {
+        return app.render(req, res, '/logout');
+    });
+
     server.get('/password_reset', (req, res) => {
         return app.render(req, res, '/password_reset', res.query);
     });
@@ -79,6 +83,7 @@ app.prepare().then(() => {
     server.get('*', (req, res) => {
         return handle(req, res);
     });
+
 
     server.listen(PORT, (err) => {
         if (err) throw err;

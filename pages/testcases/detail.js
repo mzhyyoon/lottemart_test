@@ -32,41 +32,51 @@ class TestCasesDetail extends React.Component {
             `${getHost('page', process.env.NODE_ENV)}/api/testcases/${user[0].id}/${type}/${page || 1}/${PER_PAGE}`
         );
 
-        const responseJSON = await response.json();
-        const {totalCount, testcase} = responseJSON.data;
+        if(response.status !== 200) {
+            this.setState({
+                ...this.state,
+                fetching: false
+            });
+            return;
+        }
+
+        const data = await response.json();
 
         this.setState({
             ...this.state,
-            totalCount,
-            testcases : testcase,
+            testcases : data.testcases,
+            totalCount : data.totalCount,
             fetching : false
         });
     }
 
-    onGetList = (id, type, page = 1) => {
+    onGetList = async (id, type, page = 1) => {
         if(!page){
             return;
         }
-
         page = page + 1;
 
         this.setState({
             fetching: true
         });
 
-        fetch(
-            `${getHost('page', process.env.NODE_ENV)}/api/testcases/${id}/${type}/${page}/${PER_PAGE}`
-        ).then((res) => res.json())
-            .then((responseJSON) => {
-                this.setState({
-                    page,
-                    fetching : false,
-                    testcases: [
-                        ...this.state.testcases,
-                        ...responseJSON.data.testcase
-                    ]
-                });
-            })
+        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcases/${id}/${type}/${page}/${PER_PAGE}`);
+
+        if(response.status !== 200) {
+            this.setState({
+                ...this.state,
+                fetching: false
+            });
+            return;
+        }
+
+        const data = await response.json();
+
+        this.setState({
+            page,
+            fetching : false,
+            testcases : [...this.state.testcases, ...data.testcases]
+        });
     };
 
     render() {
@@ -224,4 +234,4 @@ const RenderDetail = ({testcases, type}) => {
     );
 };
 
-export default withRouter(Authorization(TestCasesDetail));
+export default Authorization(withRouter(TestCasesDetail));

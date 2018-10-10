@@ -19,6 +19,8 @@ class TestCases extends React.Component {
     }
 
     async componentDidMount() {
+        const {router} = this.props;
+
         const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase/${this.props.user[0].id}`,{
             headers : {
                 'Accept': 'application/json',
@@ -26,26 +28,34 @@ class TestCases extends React.Component {
             },
             credentials: 'include'
         });
-        const jsonData = await response.json();
+
+        if(response.status === 500) {
+            this.setState({
+                ...this.state,
+                fetching: false
+            });
+
+            router.push('/testcases');
+            return;
+        }
+
+        const testcase = await response.json();
 
         this.setState({
             ...this.state,
-            testcase: jsonData.data.testcase,
+            testcase,
             fetching : false
         });
     }
 
-    onStart = (id, type) => {
-        const {
-            router
-        } = this.props;
-
+    onStart = async (id, type) => {
+        const {router} = this.props;
         this.setState({
             ...this.state,
             fetching: true
         });
 
-        fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase`, {
+        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -55,18 +65,23 @@ class TestCases extends React.Component {
                 id,
                 type
             })
-        }).then(() => {
+        });
+
+        if(response.status !== 200) {
             this.setState({
                 ...this.state,
                 fetching: false
             });
             router.push('/testcases');
-        }).catch(() => {
-            this.setState({
-                ...this.state,
-                fetching: false
-            });
-            router.push('/testcases');
+            return;
+        }
+
+        const testcase = await response.json();
+
+
+        this.setState({
+            testcase,
+            fetching: false
         });
     };
 
@@ -212,4 +227,4 @@ const RenderTestCase = ({testcase, fetching, onStart}) => {
     );
 };
 
-export default withRouter(Authorization(TestCases));
+export default Authorization(withRouter(TestCases));
