@@ -1,6 +1,5 @@
 import LayoutNoNavBar from "../components/LayoutNoNavBar";
 import Link from "next/link";
-import getHost from "../assets/js/get-hosts";
 import 'isomorphic-unfetch';
 
 class Logout extends React.Component {
