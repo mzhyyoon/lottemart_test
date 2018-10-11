@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import C from '../constants';
 
 const LayoutNoNavBar = (props) => (
     <div>

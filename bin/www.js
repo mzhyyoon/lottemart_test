@@ -6,12 +6,13 @@ const timeout = require('connect-timeout');
 const apiRoutes = require('../server/routes/apiRoutes');
 const redis = require('redis');
 const isEmpty = require('./is-empty');
+const config = require('config');
 
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 3000;
 const app = next({dir: '.', dev });
 const handle = app.getRequestHandler();
-const client = redis.createClient('redis://h:pacc5258add8616497c4187cd6ed453cc70f5a254718bd197973f320e196d4fff@ec2-18-214-176-192.compute-1.amazonaws.com:53689');
+const client = redis.createClient(config.redisUrl);
 
 app.prepare().then(() => {
     const server = express();

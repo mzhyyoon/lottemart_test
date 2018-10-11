@@ -4,7 +4,6 @@ import {withRouter} from 'next/router';
 import Link from "next/link";
 import moment from 'moment';
 import isEmpty from "../../assets/js/is-empty";
-import getHost from "../../assets/js/get-hosts";
 import Authorization from "../../components/utils/Authorization";
 
 const PER_PAGE = 10;
@@ -28,9 +27,7 @@ class TestCasesDetail extends React.Component {
             page
         } = this.props;
 
-        const response = await fetch(
-            `${getHost('page', process.env.NODE_ENV)}/api/testcases/${user[0].id}/${type}/${page || 1}/${PER_PAGE}`
-        );
+        const response = await fetch(`/api/testcases/${user[0].id}/${type}/${page || 1}/${PER_PAGE}`);
 
         if(response.status !== 200) {
             this.setState({
@@ -60,7 +57,7 @@ class TestCasesDetail extends React.Component {
             fetching: true
         });
 
-        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcases/${id}/${type}/${page}/${PER_PAGE}`);
+        const response = await fetch(`/api/testcases/${id}/${type}/${page}/${PER_PAGE}`);
 
         if(response.status !== 200) {
             this.setState({

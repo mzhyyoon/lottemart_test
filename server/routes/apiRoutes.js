@@ -1,10 +1,8 @@
 const express = require('express');
+const config = require('config');
 const router = express.Router();
 const redis = require('redis');
-const client = redis.createClient('redis://h:pacc5258add8616497c4187cd6ed453cc70f5a254718bd197973f320e196d4fff@ec2-18-214-176-192.compute-1.amazonaws.com:53689');
-const HOST = process.env.NODE_ENV === 'production'
-    ? 'https://api-megazonetester.herokuapp.com'
-    : 'http://localhost:3001';
+const client = redis.createClient(config.redisUrl);
 
 const getToken = require('./apis/getToken');
 const getUser = require('./apis/getUser');
@@ -31,7 +29,7 @@ router.post('/signin', (req, res) => {
     setSignin(
         req,
         res,
-        HOST,
+        config.hosts.api,
         client
     )
 });
@@ -40,7 +38,7 @@ router.post('/signup', (req, res) => {
     setSignup(
         req,
         res,
-        HOST,
+        config.hosts.api,
         client
     );
 });
@@ -62,7 +60,7 @@ router.post('/testcase', (req, res) => {
     setTestcase(
         req,
         res,
-        HOST
+        config.hosts.api,
     );
 });
 
@@ -70,7 +68,7 @@ router.get('/testcase/:id', (req, res) => {
     getTestcase(
         req,
         res,
-        HOST
+        config.hosts.api,
     );
 });
 
@@ -78,7 +76,7 @@ router.get('/testcases/:id/:type/:page/:per', (req, res) => {
     getTestcases(
         req,
         res,
-        HOST
+        config.hosts.api,
     );
 });
 

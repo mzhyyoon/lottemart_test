@@ -1,0 +1,19 @@
+{
+  "pageTitle" : "Megazone TDD - Test",
+  "logo" : {
+    "big" : "/static/images/logo_v1.1.png",
+    "small" : ""
+  },
+  "hosts" : {
+    "page" : "https://megazonetester.herokuapp.com",
+    "api" : "https://api-megazonetester.herokuapp.com"
+  },
+  "redisUrl" : "redis://h:pacc5258add8616497c4187cd6ed453cc70f5a254718bd197973f320e196d4fff@ec2-18-214-176-192.compute-1.amazonaws.com:53689",
+  "secure" : {
+    "uuid" : "megazonetdd2018@",
+    "password" : "megazonetdd1998"
+  },
+  "messages" : {
+    "noResult" : "No results found."
+  }
+}

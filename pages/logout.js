@@ -5,7 +5,7 @@ import 'isomorphic-unfetch';
 
 class Logout extends React.Component {
     async componentWillMount() {
-        fetch(`${getHost('page', process.env.NODE_ENV)}/api/logout`, {
+        fetch('/api/logout', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

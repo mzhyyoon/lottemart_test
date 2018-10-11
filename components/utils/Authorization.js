@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import getHost from "../../assets/js/get-hosts";
 
 const Authorization = (WrapComponent) => {
     return class Component extends React.Component {
@@ -12,7 +11,9 @@ const Authorization = (WrapComponent) => {
                 uuid = Cookies.get('uuid');
             }
 
-            const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/user/${uuid}`, {
+            const baseUrl = req ? `${req.protocol}://${req.get('Host')}` : '';
+
+            const response = await fetch(`${baseUrl}/api/user/${uuid}`, {
                 headers : {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

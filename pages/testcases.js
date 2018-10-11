@@ -5,7 +5,6 @@ import C from '../constants';
 import moment from 'moment';
 import isEmpty from '../assets/js/is-empty';
 import Link from 'next/link';
-import getHost from "../assets/js/get-hosts";
 import Authorization from "../components/utils/Authorization";
 
 class TestCases extends React.Component {
@@ -21,7 +20,7 @@ class TestCases extends React.Component {
     async componentDidMount() {
         const {router} = this.props;
 
-        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase/${this.props.user[0].id}`,{
+        const response = await fetch(`/api/testcase/${this.props.user[0].id}`,{
             headers : {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -55,7 +54,7 @@ class TestCases extends React.Component {
             fetching: true
         });
 
-        const response = await fetch(`${getHost('page', process.env.NODE_ENV)}/api/testcase`, {
+        const response = await fetch(`/api/testcase`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

@@ -1,5 +1,13 @@
+const config = require('config');
+
 module.exports = (req, res) => {
-    const uuid = uuidv5(req.body.email, ['1', 'q', '2', 'w', '3', 'e', '4', 'r', '5', 't', '6', 'y', '7', 'u', '8', 'i']);
+    let keys = [];
+
+    for(var i = 0, len = config.secure.uuid.length; i < len; i++) {
+        keys.push(config.secure.uuid.charAt(i));
+    }
+
+    const uuid = uuidv5(req.body.email, keys);
 
     res.status(200)
         .json({

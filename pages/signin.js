@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import 'isomorphic-unfetch';
-import {Router, withRouter} from 'next/router';
+import {withRouter} from 'next/router';
 import LayoutNoNav from '../components/LayoutNoNavBar';
 import Alert from "../components/utils/Alert";
 

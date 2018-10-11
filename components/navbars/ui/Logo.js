@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import C from '../../../constants';
 
 const Logo = () => (
     <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
